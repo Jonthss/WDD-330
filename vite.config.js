@@ -1,5 +1,6 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
+import VitePluginCopy from "vite-plugin-copy";
 
 export default defineConfig({
   root: "src/",
@@ -28,4 +29,16 @@ export default defineConfig({
       },
     },
   },
+
+  plugins: [
+    VitePluginCopy({
+      targets: [
+        {
+          src: "src/js/*",  
+          dest: "dist/js",   
+        },
+      ],
+      hook: "buildEnd",
+    }),
+  ],
 });
