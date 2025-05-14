@@ -1,5 +1,6 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
+import VitePluginCopy from "vite-plugin-copy";
 
 export default defineConfig({
   root: "src/",
@@ -28,4 +29,29 @@ export default defineConfig({
       },
     },
   },
+
+  plugins: [
+    {
+      name: 'copy-js-files', // Nome personalizado para o plugin
+      async closeBundle() {
+        const srcDir = path.resolve(__dirname, 'src/js');  // Caminho da pasta src/js
+        const destDir = path.resolve(__dirname, 'dist/js'); // Caminho da pasta dist/js
+        
+        // Cria o diretório de destino se não existir
+        if (!fs.existsSync(destDir)) {
+          fs.mkdirSync(destDir, { recursive: true });
+        }
+
+        // Lê todos os arquivos na pasta src/js
+        const files = fs.readdirSync(srcDir);
+
+        // Copia cada arquivo para a pasta dist/js
+        files.forEach((file) => {
+          const srcFilePath = path.join(srcDir, file);
+          const destFilePath = path.join(destDir, file);
+          fs.copyFileSync(srcFilePath, destFilePath); // Copia os arquivos
+        });
+      },
+    },
+  ],
 });
