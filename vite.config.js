@@ -1,5 +1,7 @@
+const path = require('path');
 import { resolve } from "path";
 import { defineConfig } from "vite";
+const fs = require('fs');
 import VitePluginCopy from "vite-plugin-copy";
 
 export default defineConfig({
