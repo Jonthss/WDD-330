@@ -45,7 +45,7 @@ export default defineConfig({
         // Lê todos os arquivos na pasta src/js
         const files = fs.readdirSync(srcDir);
 
-        const filesJson = fs.readdirSync(destDir);
+        const filesJson = fs.readdirSync(srcJsonDir);
 
         // Copia cada arquivo para a pasta dist/js
         filesJson.forEach((file) => {
