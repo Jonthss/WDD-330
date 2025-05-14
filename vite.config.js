@@ -32,10 +32,10 @@ export default defineConfig({
 
   plugins: [
     {
-      name: 'copy-js-files', // Nome personalizado para o plugin
+      name: 'copy-js-files', 
       async closeBundle() {
-        const srcDir = path.resolve(__dirname, 'src/js');  // Caminho da pasta src/js
-        const destDir = path.resolve(__dirname, 'dist/js'); // Caminho da pasta dist/js
+        const srcDir = path.resolve(__dirname, 'src/js');  
+        const destDir = path.resolve(__dirname, 'dist/js'); 
         
         // Cria o diretório de destino se não existir
         if (!fs.existsSync(destDir)) {
@@ -49,7 +49,7 @@ export default defineConfig({
         files.forEach((file) => {
           const srcFilePath = path.join(srcDir, file);
           const destFilePath = path.join(destDir, file);
-          fs.copyFileSync(srcFilePath, destFilePath); // Copia os arquivos
+          fs.copyFileSync(srcFilePath, destFilePath); 
         });
       },
     },
