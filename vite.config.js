@@ -45,9 +45,22 @@ export default defineConfig({
         files.forEach((file) => {
           const srcFilePath = path.join(srcDir, file);
           const destFilePath = path.join(destDir, file);
-          fs.copyFileSync(srcFilePath, destFilePath); 
+          fs.copyFileSync(srcFilePath, destFilePath);
         });
-      },
-    },
-  ],
+
+        // Caminhos para copiar os arquivos JSON
+        const jsonFiles = {
+          backpacksJson: path.resolve(__dirname, 'src/json/backpacks.json'),
+          sleepingBagsJson: path.resolve(__dirname, 'src/json/sleeping-bags.json'),
+          tentsJson: path.resolve(__dirname, 'src/json/tents.json')
+        };
+
+        // Copia cada arquivo JSON para o diretório de destino
+        for (const [key, filePath] of Object.entries(jsonFiles)) {
+          const destFilePath = path.resolve(__dirname, 'dist/json', path.basename(filePath));
+          fs.copyFileSync(filePath, destFilePath);
+        }
+      }
+    }
+  ]
 });
