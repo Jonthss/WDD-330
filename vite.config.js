@@ -31,36 +31,40 @@ export default defineConfig({
       name: 'copy-js-files', 
       async closeBundle() {
         const srcDir = path.resolve(__dirname, 'src/js');  
-        const destDir = path.resolve(__dirname, 'dist/js'); 
+        const destDir = path.resolve(__dirname, 'dist/js');
+        
+        const srcJsonDir = path.resolve(__dirname, 'src/json');
+        const destJsonDir = path.resolve(__dirname, 'dist/json');
         
         // Cria o diretório de destino se não existir
         if (!fs.existsSync(destDir)) {
           fs.mkdirSync(destDir, { recursive: true });
         }
 
+        if (!fs.existsSync(destJsonDir)) {
+          fs.mkdirSync(destJsonDir, { recursive: true });
+        }
+
         // Lê todos os arquivos na pasta src/js
         const files = fs.readdirSync(srcDir);
 
+        const filesJson = fs.readdirSync(destDir);
+
         // Copia cada arquivo para a pasta dist/js
+        filesJson.forEach((file) => {
+          const srcFilePathJson = path.join(srcJsonDir, file);
+          const destFilePathJson = path.join(destJsonDir, file);
+          fs.copyFileSync(srcFilePathJson, destFilePathJson); 
+        });
+
         files.forEach((file) => {
           const srcFilePath = path.join(srcDir, file);
           const destFilePath = path.join(destDir, file);
-          fs.copyFileSync(srcFilePath, destFilePath);
+          fs.copyFileSync(srcFilePath, destFilePath); 
         });
 
-        // Caminhos para copiar os arquivos JSON
-        const jsonFiles = {
-          backpacksJson: path.resolve(__dirname, 'src/json/backpacks.json'),
-          sleepingBagsJson: path.resolve(__dirname, 'src/json/sleeping-bags.json'),
-          tentsJson: path.resolve(__dirname, 'src/json/tents.json')
-        };
-
-        // Copia cada arquivo JSON para o diretório de destino
-        for (const [key, filePath] of Object.entries(jsonFiles)) {
-          const destFilePath = path.resolve(__dirname, 'dist/json', path.basename(filePath));
-          fs.copyFileSync(filePath, destFilePath);
-        }
-      }
-    }
-  ]
+        
+      },
+    },
+  ],
 });
