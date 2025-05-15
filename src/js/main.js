@@ -1,4 +1,4 @@
-import ProductData from './ProductData.js';
+import ProductData from './ProductData.mjs';
 import ProductList from './ProductList.mjs';
 
 const category = 'tents';
