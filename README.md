@@ -1,11 +1,26 @@
-# BYU-Pathway Worldwide Online
-## WDD 330 - Web Frontend Development II
+# sleepoutside
 
-### ⛺ SleepOutside Example Solution
+Live Link: https://sleepoutside-wdd330-t2.netlify.app/
 
- - W02 Team Activity: Dynamic Product Detail Pages
+# Github link
 
- - https://byui-cse.github.io/wdd330-ww-course/week02/team.html
+https://github.com/HottieHotton/SleepOutside-WDD330
 
----
-_BYU-Pathway Worldwide improves lives through access to spiritually based, online affordable higher education. Its mission is to develop disciples of Jesus Christ who are leaders in their homes, the Church, and their communities._
+## Description
+
+Use this as a starting point to complete the WDD 330 team activity: the SleepOutside web application. It scaffolds out a simple web app with Vite support to bundle up our assets.
+
+## Prerequisites
+
+- You must have Node installed. visit https://byui-cit.github.io/advcss/lesson01/l01-software.html and skip to the Node section for instructions
+
+## Setup
+
+- `npm install`
+- `npm run start` starts up a local server and updates on any JS or CSS/SCSS changes.
+
+## Other commands
+
+- `npm run build` to build final files when you are ready to turn in.
+- `npm run lint` to run ESLint against your code to find errors.
+- `npm run format` to run Prettier to automatically format your code.
