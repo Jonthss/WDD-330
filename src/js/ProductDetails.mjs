@@ -1,23 +1,4 @@
-import { setLocalStorage, getLocalStorage } from "./utils.mjs";
-
-function productDetailsTemplate(product) {
-  return `
-    <section class="product-detail"> 
-        <h3>${product.Brand.Name}</h3>
-        <h2 class="divider">${product.NameWithoutBrand}</h2>
-        <img
-            class="divider"
-            src="${product.Image}"
-            alt="${product.NameWithoutBrand}"
-        />
-        <p class="product-card__price">$${product.FinalPrice}</p>
-        <p class="product__color">${product.Colors[0].ColorName}</p>
-        <p class="product__description">${product.DescriptionHtmlSimple}</p>
-        <div class="product-detail__add">
-            <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
-        </div>
-    </section>`;
-}
+import { setLocalStorage } from './utils.mjs';
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -25,23 +6,67 @@ export default class ProductDetails {
     this.product = {};
     this.dataSource = dataSource;
   }
+
   async init() {
-    this.product = await this.dataSource.findProductById(this.productId);
-    this.renderProductDetails("main");
-    document
-      .getElementById("addToCart")
-      .addEventListener("click", this.addToCart.bind(this));
+    await new Promise(resolve => {
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        resolve();
+      } else {
+        document.addEventListener('DOMContentLoaded', resolve, { once: true });
+      }
+    });
+
+    console.log('Initializing ProductDetails for productId:', this.productId);
+
+    try {
+      this.product = await this.dataSource.findProductById(this.productId);
+      if (!this.product) {
+        console.error('Product not found for ID:', this.productId);
+        return;
+      }
+      console.log('Fetched product:', this.product);
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      return;
+    }
+
+    this.renderProductDetails();
+
+    const addToCartButton = document.getElementById('addToCart');
+    if (addToCartButton) {
+      addToCartButton.addEventListener('click', this.addProductToCart.bind(this));
+      console.log('Event listener attached to Add to Cart button');
+    } else {
+      console.error('Add to Cart button not found in the DOM');
+    }
   }
-  addToCart() {
-    let cart = getLocalStorage("so-cart") || [];
-    cart.push(this.product)
-    setLocalStorage("so-cart", cart);
+
+  addProductToCart() {
+    if (!this.product || !this.product.Id) {
+      console.error('No valid product data available to add to cart:', this.product);
+      return;
+    }
+    console.log('Adding to cart:', this.product);
+    setLocalStorage('so-cart', this.product);
+    alert('Item added to cart!');
+    console.log('Cart updated in localStorage:', getLocalStorage('so-cart'));
   }
-  renderProductDetails(selector) {
-    const element = document.querySelector(selector);
-    element.insertAdjacentHTML(
-      "afterBegin",
-      productDetailsTemplate(this.product),
-    );
+
+  renderProductDetails() {
+    const nameElement = document.querySelector('.product-detail h2');
+    const imageElement = document.querySelector('.product-detail img');
+    const priceElement = document.querySelector('.product-card__price');
+    const descriptionElement = document.querySelector('.product__description');
+    const colorElement = document.querySelector('.product__color');
+
+    if (nameElement) nameElement.textContent = this.product.Name || 'Unknown Product';
+    if (imageElement) imageElement.src = this.product.Image || '';
+    if (priceElement) priceElement.textContent = `$${this.product.ListPrice || '0.00'}`;
+    if (descriptionElement) {
+      // Strip HTML tags and set plain text
+      const plainText = this.product.DescriptionHtmlSimple.replace(/<[^>]+>/g, '');
+      descriptionElement.textContent = plainText || 'No description available';
+    }
+    if (colorElement) colorElement.textContent = this.product.Colors?.[0]?.ColorName || '';
   }
 }

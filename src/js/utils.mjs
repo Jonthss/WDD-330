@@ -1,45 +1,33 @@
-// wrapper for querySelector...returns matching element
-export function qs(selector, parent = document) {
-  return parent.querySelector(selector);
+export function getLocalStorage(key) {
+  const data = localStorage.getItem(key);
+  if (!data) return [];
+  try {
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Error parsing localStorage data:", error);
+    return [];
+  }
 }
-// or a more concise version if you are into that sort of thing:
-// export const qs = (selector, parent = document) => parent.querySelector(selector);
 
-export function getParams(params){
+export function setLocalStorage(key, data) {
+  let items = getLocalStorage(key);
+  if (!Array.isArray(items)) items = [];
+  items.push(data);
+  localStorage.setItem(key, JSON.stringify(items));
+}
+
+export function getParam(param) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const product = urlParams.get(params)
-  return product;
+  return urlParams.get(param);
 }
 
-// retrieve data from localstorage
-export function getLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
-}
-
-export function renderListWithTemplate(
-  templateFn,
-  parentElement,
-  list,
-  position = "afterbegin",
-  clear = false
-) {
-  const htmlStrings = list.map(templateFn);
-  if (clear) {
-    parentElement.innerHTML = "";
+export function renderListWithTemplate(templateFn, parentElement, list, position = 'afterbegin', clear = false) {
+  if (!parentElement) {
+    console.error("Parent element is null or undefined");
+    return;
   }
-  parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
-}
-
-// save data to local storage
-export function setLocalStorage(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
-// set a listener for both touchend and click
-export function setClick(selector, callback) {
-  qs(selector).addEventListener("touchend", (event) => {
-    event.preventDefault();
-    callback();
-  });
-  qs(selector).addEventListener("click", callback);
+  if (clear) parentElement.innerHTML = '';
+  const htmlStrings = list.map(templateFn);
+  parentElement.insertAdjacentHTML(position, htmlStrings.join(''));
 }
