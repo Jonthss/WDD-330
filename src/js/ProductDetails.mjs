@@ -1,4 +1,4 @@
-import { setLocalStorage } from './utils.mjs';
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -8,65 +8,48 @@ export default class ProductDetails {
   }
 
   async init() {
-    await new Promise(resolve => {
-      if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        resolve();
-      } else {
-        document.addEventListener('DOMContentLoaded', resolve, { once: true });
-      }
-    });
+    this.product = await this.dataSource.findProductById(this.productId);
 
-    console.log('Initializing ProductDetails for productId:', this.productId);
-
-    try {
-      this.product = await this.dataSource.findProductById(this.productId);
-      if (!this.product) {
-        console.error('Product not found for ID:', this.productId);
-        return;
-      }
-      console.log('Fetched product:', this.product);
-    } catch (error) {
-      console.error('Error fetching product:', error);
+    if (!this.product) {
+      console.error("Product not found!");
       return;
     }
 
     this.renderProductDetails();
 
-    const addToCartButton = document.getElementById('addToCart');
-    if (addToCartButton) {
-      addToCartButton.addEventListener('click', this.addProductToCart.bind(this));
-      console.log('Event listener attached to Add to Cart button');
-    } else {
-      console.error('Add to Cart button not found in the DOM');
-    }
+    document
+      .getElementById("addToCart")
+      .addEventListener("click", this.addProductToCart.bind(this));
   }
 
   addProductToCart() {
-    if (!this.product || !this.product.Id) {
-      console.error('No valid product data available to add to cart:', this.product);
-      return;
+    let cartItems = getLocalStorage("so-cart") || [];
+
+    // Check if the item is already in the cart
+    const existingItem = cartItems.find((item) => item.Id === this.product.Id);
+
+    if (existingItem) {
+      existingItem.quantity += 1; // Increment quantity
+    } else {
+      this.product.quantity = 1; // Initialize quantity for new items
+      cartItems.push(this.product);
     }
-    console.log('Adding to cart:', this.product);
-    setLocalStorage('so-cart', this.product);
-    alert('Item added to cart!');
-    console.log('Cart updated in localStorage:', getLocalStorage('so-cart'));
+
+    setLocalStorage("so-cart", cartItems);
+    alert(`${this.product.Name} added to cart!`);
   }
 
   renderProductDetails() {
-    const nameElement = document.querySelector('.product-detail h2');
-    const imageElement = document.querySelector('.product-detail img');
-    const priceElement = document.querySelector('.product-card__price');
-    const descriptionElement = document.querySelector('.product__description');
-    const colorElement = document.querySelector('.product__color');
-
-    if (nameElement) nameElement.textContent = this.product.Name || 'Unknown Product';
-    if (imageElement) imageElement.src = this.product.Image || '';
-    if (priceElement) priceElement.textContent = `$${this.product.ListPrice || '0.00'}`;
-    if (descriptionElement) {
-      // Strip HTML tags and set plain text
-      const plainText = this.product.DescriptionHtmlSimple.replace(/<[^>]+>/g, '');
-      descriptionElement.textContent = plainText || 'No description available';
-    }
-    if (colorElement) colorElement.textContent = this.product.Colors?.[0]?.ColorName || '';
+    document.title = `Sleep Outside | ${this.product.Name}`;
+    document.querySelector("#product-title").textContent = this.product.Name;
+    document.querySelector("#product-brand").textContent =
+      this.product.Brand?.Name || "Unknown Brand";
+    document.querySelector("#product-image").src = this.product.Image;
+    document.querySelector("#product-price").textContent =
+      `$${this.product.FinalPrice.toFixed(2)}`;
+    document.querySelector("#product-color").textContent =
+      this.product.Colors?.[0]?.ColorName || "No color available";
+    document.querySelector("#product-description").innerHTML =
+      this.product.DescriptionHtmlSimple;
   }
 }
