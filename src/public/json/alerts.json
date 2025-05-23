@@ -1,0 +1,12 @@
+[
+    {
+        "message": "🔥 This is only a test.",
+        "background": "darkblue",
+        "color": "white"
+    },
+    {
+        "message": "🚚 Free shipping on orders over $100!",
+        "background": "green",
+        "color": "white"
+    }
+]
