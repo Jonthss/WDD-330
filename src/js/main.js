@@ -13,3 +13,25 @@ updateCartNum();
 
 // To call the header and footer partials
 loadHeaderFooter();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('register-modal');
+  const closeBtn = document.querySelector('.close-btn');
+
+  const hasSeenModal = localStorage.getItem('hasSeenRegisterModal');
+
+  if (!hasSeenModal) {
+    modal.style.display = 'block';
+    localStorage.setItem('hasSeenRegisterModal', 'true');
+  }
+
+  closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  window.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+});
