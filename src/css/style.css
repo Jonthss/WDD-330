@@ -469,6 +469,76 @@ button {
   color: #2a7f62;
 }
 
+.newsletter-signup {
+  background: #f5f5f5;
+  padding: 0.75rem 1.5rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+  max-width: 100%;
+  border: 2px solid #f0a868;
+  box-sizing: border-box;
+}
+
+.newsletter-signup > .top-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.newsletter-signup h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  white-space: nowrap;
+}
+
+.newsletter-signup form {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.newsletter-signup label {
+  display: none;
+}
+
+.newsletter-signup input[type="email"] {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex-grow: 1;
+}
+
+.newsletter-signup button {
+  padding: 0.6rem 1.2rem;
+  background-color: #0066cc;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.newsletter-signup button:hover {
+  background-color: #004999;
+}
+
+#newsletter-message {
+  margin-top: 0.5rem;
+  font-style: italic;
+  color: green;
+  white-space: nowrap;
+  text-align: center;
+  width: 100%;
+  display: none; /* oculto inicialmente */
+}
+
+ 
+
 
 
 @media screen and (min-width: 500px) {

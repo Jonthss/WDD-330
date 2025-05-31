@@ -35,3 +35,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("newsletter-form");
+  const message = document.getElementById("newsletter-message");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const emailInput = form.email.value.trim();
+
+    if (emailInput) {
+      // Sucesso: exibe a mensagem de confirmação
+      message.textContent = `Thanks for subscribing, ${emailInput}!`;
+      message.style.color = "green";
+      message.style.display = "block";
+      form.reset();
+    } else {
+      // Erro: esconde a mensagem
+      message.style.display = "none";
+    }
+  });
+});
+
+
